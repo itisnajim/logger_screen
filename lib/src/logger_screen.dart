@@ -480,10 +480,10 @@ class _LoggerScreenState extends State<LoggerScreen> {
     try {
       return widget.style.isCupertino
           ? CupertinoTheme.of(context).primaryColor
-          : Theme.of(context).primaryColor;
+          : Theme.of(context).colorScheme.primary;
     } catch (e) {
       try {
-        return Theme.of(context).primaryColor;
+        return Theme.of(context).colorScheme.primary;
       } catch (e) {
         return Colors.blue;
       }

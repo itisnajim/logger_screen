@@ -5,27 +5,82 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:logger_screen/logger_screen.dart';
 
+import 'color_schemes.dart';
 import 'logger_screen_wrapper.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Brightness _brightness =
+      WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+        () {
+      WidgetsBinding.instance.handlePlatformBrightnessChanged();
+      setState(() {
+        _brightness =
+            WidgetsBinding.instance.platformDispatcher.platformBrightness;
+      });
+    };
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final themeData = ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      useMaterial3: true,
+    final materialLightTheme =
+        ThemeData(useMaterial3: true, colorScheme: lightColorScheme);
+    final materialDarkTheme =
+        ThemeData(useMaterial3: true, colorScheme: darkColorScheme);
+
+    const darkDefaultCupertinoTheme =
+        CupertinoThemeData(brightness: Brightness.dark);
+    final cupertinoDarkTheme = MaterialBasedCupertinoThemeData(
+      materialTheme: materialDarkTheme.copyWith(
+        cupertinoOverrideTheme: CupertinoThemeData(
+          brightness: Brightness.dark,
+          barBackgroundColor: darkDefaultCupertinoTheme.barBackgroundColor,
+          textTheme: CupertinoTextThemeData(
+            primaryColor: Colors.white,
+            navActionTextStyle:
+                darkDefaultCupertinoTheme.textTheme.navActionTextStyle.copyWith(
+              color: const Color(0xF0F9F9F9),
+            ),
+            navLargeTitleTextStyle: darkDefaultCupertinoTheme
+                .textTheme.navLargeTitleTextStyle
+                .copyWith(color: const Color(0xF0F9F9F9)),
+          ),
+        ),
+      ),
     );
-    return CupertinoApp(
+    final cupertinoLightTheme =
+        MaterialBasedCupertinoThemeData(materialTheme: materialLightTheme);
+
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: MaterialBasedCupertinoThemeData(materialTheme: themeData),
-      home: MaterialApp(
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      themeMode: ThemeMode.system,
+      home: CupertinoApp(
         debugShowCheckedModeBanner: false,
-        theme: themeData,
+        theme: _brightness == Brightness.light
+            ? cupertinoLightTheme
+            : cupertinoDarkTheme,
+        localizationsDelegates: const [
+          DefaultMaterialLocalizations.delegate,
+          DefaultCupertinoLocalizations.delegate,
+          DefaultWidgetsLocalizations.delegate,
+        ],
         home: const HomeScreen(),
       ),
     );

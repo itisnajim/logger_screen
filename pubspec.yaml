@@ -1,6 +1,6 @@
 name: logger_screen
 description: A Flutter package for displaying Logger logs with a user-friendly UI.
-version: 0.0.1
+version: 0.0.2
 repository: https://github.com/itisnajim/logger_screen.git
 
 environment:
