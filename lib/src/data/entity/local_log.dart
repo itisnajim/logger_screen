@@ -28,7 +28,5 @@ enum LocalLevel {
   info,
   warning,
   error,
-  @Deprecated('[wtf] is being deprecated in favor of [fatal].')
-  wtf,
   fatal;
 }

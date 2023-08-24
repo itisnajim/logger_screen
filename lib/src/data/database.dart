@@ -8,7 +8,7 @@ import 'database_directory_path.dart';
 class Database {
   final String name;
   final String? encryptionKey;
-  final List<IsarCollectionSchema> schemas;
+  final List<IsarGeneratedSchema> schemas;
 
   /// Creates an instance of [Database].
   ///

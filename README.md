@@ -62,7 +62,6 @@ LoggerScreen(
   logger.i("Info log message");
   logger.w("Warning log message");
   logger.e("Error log message");
-  logger.wtf("WTF log message");
 ```
 
 ## Features

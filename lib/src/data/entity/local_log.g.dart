@@ -14,16 +14,57 @@ extension GetLocalLogCollection on Isar {
   IsarCollection<String, LocalLog> get localLogs => this.collection();
 }
 
-const LocalLogSchema = IsarCollectionSchema(
-  schema:
-      '{"name":"LocalLog","idName":"id","properties":[{"name":"message","type":"String"},{"name":"formatted","type":"String"},{"name":"timestamp","type":"DateTime"},{"name":"level","type":"Byte","enumMap":{"trace":0,"debug":1,"info":2,"warning":3,"error":4,"wtf":5,"fatal":6}},{"name":"levelForeground","type":"Long"},{"name":"levelBackground","type":"Long"},{"name":"id","type":"String"}]}',
+const LocalLogSchema = IsarGeneratedSchema(
+  schema: IsarSchema(
+    name: 'LocalLog',
+    idName: 'id',
+    embedded: false,
+    properties: [
+      IsarPropertySchema(
+        name: 'message',
+        type: IsarType.string,
+      ),
+      IsarPropertySchema(
+        name: 'formatted',
+        type: IsarType.string,
+      ),
+      IsarPropertySchema(
+        name: 'timestamp',
+        type: IsarType.dateTime,
+      ),
+      IsarPropertySchema(
+        name: 'level',
+        type: IsarType.byte,
+        enumMap: {
+          "trace": 0,
+          "debug": 1,
+          "info": 2,
+          "warning": 3,
+          "error": 4,
+          "fatal": 5
+        },
+      ),
+      IsarPropertySchema(
+        name: 'levelForeground',
+        type: IsarType.long,
+      ),
+      IsarPropertySchema(
+        name: 'levelBackground',
+        type: IsarType.long,
+      ),
+      IsarPropertySchema(
+        name: 'id',
+        type: IsarType.string,
+      ),
+    ],
+    indexes: [],
+  ),
   converter: IsarObjectConverter<String, LocalLog>(
     serialize: serializeLocalLog,
     deserialize: deserializeLocalLog,
     deserializeProperty: deserializeLocalLogProp,
   ),
   embeddedSchemas: [],
-  //hash: 3945217570814107922,
 );
 
 @isarProtected
@@ -245,15 +286,52 @@ extension LocalLogQueryUpdate on IsarQuery<LocalLog> {
   _LocalLogQueryUpdate get updateAll => _LocalLogQueryUpdateImpl(this);
 }
 
+class _LocalLogQueryBuilderUpdateImpl implements _LocalLogQueryUpdate {
+  const _LocalLogQueryBuilderUpdateImpl(this.query, {this.limit});
+
+  final QueryBuilder<LocalLog, LocalLog, QOperations> query;
+  final int? limit;
+
+  @override
+  int call({
+    Object? message = ignore,
+    Object? formatted = ignore,
+    Object? timestamp = ignore,
+    Object? level = ignore,
+    Object? levelForeground = ignore,
+    Object? levelBackground = ignore,
+  }) {
+    final q = query.build();
+    try {
+      return q.updateProperties(limit: limit, {
+        if (message != ignore) 1: message as String?,
+        if (formatted != ignore) 2: formatted as String?,
+        if (timestamp != ignore) 3: timestamp as DateTime?,
+        if (level != ignore) 4: level as LocalLevel?,
+        if (levelForeground != ignore) 5: levelForeground as int?,
+        if (levelBackground != ignore) 6: levelBackground as int?,
+      });
+    } finally {
+      q.close();
+    }
+  }
+}
+
+extension LocalLogQueryBuilderUpdate
+    on QueryBuilder<LocalLog, LocalLog, QOperations> {
+  _LocalLogQueryUpdate get updateFirst =>
+      _LocalLogQueryBuilderUpdateImpl(this, limit: 1);
+
+  _LocalLogQueryUpdate get updateAll => _LocalLogQueryBuilderUpdateImpl(this);
+}
+
 const _localLogLevel = {
   0: LocalLevel.trace,
   1: LocalLevel.debug,
   2: LocalLevel.info,
   3: LocalLevel.warning,
   4: LocalLevel.error,
-  // ignore: deprecated_member_use_from_same_package
-  5: LocalLevel.wtf,
-  6: LocalLevel.fatal,
+  5: LocalLevel.fatal,
 };
 
 extension LocalLogQueryFilter

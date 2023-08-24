@@ -20,8 +20,7 @@ class LogLevelMapper extends Mapper<Level, LocalLevel> {
         return LocalLevel.error;
       // ignore: deprecated_member_use
       case Level.wtf:
-        // ignore: deprecated_member_use_from_same_package
-        return LocalLevel.wtf;
+        return LocalLevel.fatal;
       case Level.fatal:
         return LocalLevel.fatal;
       default:
