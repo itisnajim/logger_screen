@@ -86,6 +86,8 @@ class Log {
             Level.nothing,
             // ignore: deprecated_member_use
             Level.verbose,
+            // ignore: deprecated_member_use
+            Level.wtf,
           ].contains(l))
       .toList();
 }
